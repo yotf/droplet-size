@@ -144,12 +144,14 @@ with tab_manual:
     conv_manual = col_c.number_input("Conversion factor", min_value=0.01, value=3.17, step=0.01)
 
     st.markdown("**Enter droplet count per division:**")
-    cols = st.columns(5)
     counts = []
-    for i in range(int(num_divisions)):
-        T = i + 1
-        n = cols[i % 5].number_input(f"Division {T}", min_value=0, value=0, step=1, key=f"div_{T}")
-        counts.append((T, n))
+    for row_start in range(0, int(num_divisions), 5):
+        row_cols = st.columns(5)
+        for col_idx in range(5):
+            T = row_start + col_idx + 1
+            if T <= int(num_divisions):
+                n = row_cols[col_idx].number_input(f"Division {T}", min_value=0, value=0, step=1, key=f"div_{T}")
+                counts.append((T, n))
 
     if st.button("Calculate", type="primary"):
         try:
