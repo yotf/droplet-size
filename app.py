@@ -54,12 +54,24 @@ def show_results(df, NM, VM, label):
     col2.metric("Volume Median Diameter (VMD)", f"{VM:.2f} µm")
     with st.expander("Full data table"):
         st.dataframe(df)
+    fname = label.replace(" ", "_")
+    col_csv, col_xlsx = st.columns(2)
+
     csv = df.to_csv().encode("utf-8")
-    st.download_button(
+    col_csv.download_button(
         label=f"Download CSV — {label}",
         data=csv,
-        file_name=f"{label.replace(' ', '_')}.csv",
+        file_name=f"{fname}.csv",
         mime="text/csv",
+    )
+
+    xlsx_buf = io.BytesIO()
+    df.to_excel(xlsx_buf, index=True)
+    col_xlsx.download_button(
+        label=f"Download Excel — {label}",
+        data=xlsx_buf.getvalue(),
+        file_name=f"{fname}.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
 
 
